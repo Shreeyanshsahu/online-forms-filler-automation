@@ -13,7 +13,7 @@ const {
 const MODEL = "qwen2.5:7b";
 
 const START_FILE = 180;
-const END_FILE = 500;
+const END_FILE = 185;
 
 const BASE_URL =
     "https://theapexdatasolution.com";

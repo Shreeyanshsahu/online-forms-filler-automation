@@ -11,33 +11,83 @@ Instead of manually opening every PDF, reading its contents, copying values, fil
 > **AI interprets the document. Deterministic code validates, controls, verifies, and submits the form.**
 
 ---
-
 ## 📌 The Problem
 
-Many data-entry workflows follow the same repetitive process:
+This project started from a real-world data-entry workflow encountered by
+one of my friends while working as a data-entry operator/freelancer.
 
-1. Open a webpage.
-2. Download or read a PDF associated with a record.
-3. Find dozens of required values inside the PDF.
-4. Match those values with fields in an online form.
-5. Handle missing or special values consistently.
-6. Enter every value manually.
-7. Check that the information was entered correctly.
-8. Submit the form.
-9. Move to the next record.
-10. Repeat hundreds of times.
+The task involved processing product information from PDF documents and
+manually entering that information into an online form. Each record
+contained **37 fields** that had to be read, interpreted, entered, and
+checked before submission.
 
-Doing this manually is:
+For a fast operator, completing a single form could take approximately
+**20–30 minutes**.
 
-- Time-consuming
-- Repetitive
-- Error-prone
-- Difficult to scale
+The process was essentially:
 
-This project turns that workflow into an automated pipeline.
+1. Open the webpage for a record.
+2. Open or download the associated PDF.
+3. Read the product information from the PDF.
+4. Find the required values among the PDF's contents.
+5. Identify the corresponding field in the web form.
+6. Manually enter the value.
+7. Repeat this for all 37 fields.
+8. Check the entered information.
+9. Submit the form.
+10. Move to the next record.
+11. Repeat the same process hundreds of times.
 
----
+The work itself required relatively little creativity once the workflow
+was understood. Most of the time was spent repeatedly reading,
+copying, pasting, checking, and submitting information.
 
+For a freelancer or data-entry operator, this meant spending several
+hours performing essentially the same sequence of actions.
+
+### Why Automate It?
+
+The repetitive nature of the work made it a good candidate for
+automation.
+
+The original workload was expected to be completed within a limited
+deadline (approximately **5 days**), which meant that a large number of
+forms had to be processed manually within that period.
+
+Instead of having a person spend 20–30 minutes on every form, the goal
+was to build a system that could handle the repetitive parts
+automatically while still validating the information before submission.
+
+The result was this automation pipeline.
+
+### The Result
+
+The automation reduced the manual interaction required for each form
+from roughly **20–30 minutes to under a minute per form** in the tested
+workflow.
+
+In a real test batch, **6 forms were processed and successfully
+submitted in 4 minutes 20.49 seconds**, averaging approximately
+**43 seconds per form**, including:
+
+- PDF download
+- PDF text extraction
+- Local AI processing
+- Data validation
+- Form filling
+- Verification of all 37 fields
+- Form submission
+
+A larger batch can therefore be processed in a few hours rather than
+requiring many hours of continuous manual data entry.
+
+The automation is not intended to replace the reasoning involved in
+designing the workflow. Instead, it removes the repetitive execution
+that makes this type of work slow and tedious.
+
+> **The goal is simple: let the computer perform the repetitive data
+> entry while keeping validation and correctness as deterministic as
+> possible.**
 ## 💡 The Solution
 
 The automation combines a **local Large Language Model** with deterministic browser automation.
@@ -58,6 +108,37 @@ JavaScript then handles the critical operations:
 
 This separation makes the workflow considerably more reliable than allowing an AI model to directly control every step.
 
+## 🌐 Adapting the Automation to Another Website
+
+This project was originally designed around a specific type of
+PDF-to-form data-entry website.
+
+It is therefore **not a plug-and-play automation for every website**.
+
+The overall architecture can be reused, but websites differ in their
+HTML structure, authentication, PDF locations, form fields, and
+submission behavior.
+
+If you want to use this project with another website, the main parts
+that need to be customized are described below.
+
+### 1. `schema.js` — Document Fields and Mapping
+
+This file contains the structure of the information that the AI is
+expected to extract from the PDF.
+
+If your PDFs contain different information, update the fields in the
+schema.
+
+For example, the original workflow may contain fields such as:
+
+```text
+Product Name
+Brand
+Manufacturer
+Product Price
+Country of Origin
+...
 ---
 
 ## ⚙️ How It Works
