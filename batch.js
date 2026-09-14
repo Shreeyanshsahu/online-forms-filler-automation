@@ -12,8 +12,8 @@ const {
 
 const MODEL = "qwen2.5:7b";
 
-const START_FILE = 180;
-const END_FILE = 185;
+const START_FILE = 214;
+const END_FILE = 500;
 
 const BASE_URL =
     "https://theapexdatasolution.com";
@@ -36,7 +36,7 @@ function logResult(message) {
     );
 }
 
-
+ 
 // Start a fresh log
 fs.writeFileSync(
     LOG_FILE,
@@ -467,12 +467,12 @@ async function submitForm(
             waitUntil: "domcontentloaded",
             timeout: 120000
         })
-        .then(() => {
-            navigationOccurred = true;
-        })
-        .catch(() => {
-            // No navigation within timeout.
-        });
+            .then(() => {
+                navigationOccurred = true;
+            })
+            .catch(() => {
+                // No navigation within timeout.
+            });
 
 
     await submitButton.click();
@@ -569,7 +569,14 @@ async function submitForm(
         "SUBMISSION UNCERTAIN — could not confirm server response"
     );
 }
-
+function normalizeForComparison(value) {
+    return String(value ?? "")
+        .replace(/\r\n/g, "\n")
+        .replace(/\r/g, "\n")
+        .replace(/\n/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+}
 
 // ============================================================
 // PROCESS ONE FILE
@@ -834,14 +841,12 @@ async function processFile(
                 await input.inputValue();
 
 
-            if (
-                actual === expected
-            ) {
+            const normalizedExpected = normalizeForComparison(expected);
+            const normalizedActual = normalizeForComparison(actual);
 
+            if (normalizedActual === normalizedExpected) {
                 verified++;
-
             } else {
-
                 throw new Error(
                     `MISMATCH ${name} | expected="${expected}" | actual="${actual}"`
                 );
